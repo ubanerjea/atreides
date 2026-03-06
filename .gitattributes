@@ -1,0 +1,23 @@
+# Use platform-native behavior by default, but force LF for important text files
+* text=auto
+
+# Force LF for source and documentation files
+*.py    text eol=lf
+*.sh    text eol=lf
+*.md    text eol=lf
+*.sql   text eol=lf
+*.toml  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.txt   text eol=lf
+
+# Keep binary files binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.zip   binary
+*.pyc   binary
+
+# Ensure Git handles this file consistently
+/.gitattributes text eol=lf
