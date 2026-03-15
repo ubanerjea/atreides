@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, text
 
 def _load_config(config_path: Path | None = None) -> dict:
     if config_path is None:
-        config_path = Path(__file__).parent.parent / "db.toml"
+        config_path = Path(__file__).parent.parent.parent / "db.toml"
     with open(config_path, "rb") as f:
         return tomllib.load(f)["database"]
 

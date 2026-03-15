@@ -7,7 +7,8 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 
-from src.db import DBConnection
+from src.util.db import DBConnection
+from src.util.file_util import FileUtil
 
 
 class ExplainMode(Enum):
@@ -22,7 +23,7 @@ _MODE_PREFIX = {
     ExplainMode.EXPLAIN_ANALYZE_JSON: "EXPLAIN (ANALYZE, FORMAT JSON)",
 }
 
-_OUT_DIR = Path(__file__).parent.parent.parent / "out"
+_file_util = FileUtil()
 
 
 def run_explain(query: str, mode: ExplainMode) -> list[dict]:
@@ -33,7 +34,6 @@ def run_explain(query: str, mode: ExplainMode) -> list[dict]:
 
 
 def write_output(rows: list[dict], mode: ExplainMode) -> Path:
-    _OUT_DIR.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     if mode == ExplainMode.EXPLAIN_ANALYZE_JSON:
@@ -41,15 +41,11 @@ def write_output(rows: list[dict], mode: ExplainMode) -> Path:
         raw = rows[0]["QUERY PLAN"]
         data = json.loads(raw) if isinstance(raw, str) else raw
         filename = f"query_explain_{mode.value}_{timestamp}.json"
-        out_path = _OUT_DIR / filename
-        out_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        return _file_util.write_file(filename, json.dumps(data, indent=2))
     else:
         filename = f"query_explain_{mode.value}_{timestamp}.txt"
-        out_path = _OUT_DIR / filename
         lines = [row["QUERY PLAN"] for row in rows]
-        out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    return out_path
+        return _file_util.write_file(filename, "\n".join(lines) + "\n")
 
 
 def explain_and_save(query: str, mode: ExplainMode) -> Path:

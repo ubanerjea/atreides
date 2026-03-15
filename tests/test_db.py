@@ -1,7 +1,7 @@
 # Run with: pytest tests/test_db.py -v
 
 import pytest
-from src.db import DBConnection
+from src.util.db import DBConnection
 
 
 @pytest.fixture(scope="module")

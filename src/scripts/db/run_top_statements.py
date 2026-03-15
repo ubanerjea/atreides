@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 import pandas as pd
 
-from src.db import DBConnection
+from src.util.db import DBConnection
 
 QUERY_NAME = "top_statements"
 SQL_PATH   = Path(__file__).parent.parent.parent / "sql" / "queries" / "top_statements.sql"
