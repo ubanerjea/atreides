@@ -23,7 +23,7 @@ class DBConnection:
             connect_args={"options": f"-csearch_path={cfg['schema']}"},
         )
 
-    def query(self, sql: str) -> list[tuple]:
+    def query(self, sql: str) -> list[dict]:
         with self._engine.connect() as conn:
             result = conn.execute(text(sql))
-            return result.fetchall()
+            return [dict(row) for row in result.mappings()]

@@ -7,7 +7,8 @@ Atreides is a PostgreSQL performance analysis and monitoring tool. It connects t
 ## Project Layout
 
 - `src/db.py` — `DBConnection` class; core database access layer
-- `src/run_top_statements.py` — main script; generates top SQL statements report
+- `src/scripts/db/run_top_statements.py` — generates top SQL statements report
+- `src/scripts/db/mask_db_config.py` — masks credentials in db.toml for safe display
 - `src/sql/` — SQL files (queries and DDL)
 - `src/tmp/explain/` — scratch area for EXPLAIN plan analysis
 - `out/` — report output directory (git-ignored)
@@ -18,7 +19,7 @@ Atreides is a PostgreSQL performance analysis and monitoring tool. It connects t
 
 ```bash
 # Main report
-python src/run_top_statements.py
+python src/scripts/db/run_top_statements.py
 
 # EXPLAIN analysis
 python src/tmp/explain/run.py
@@ -36,17 +37,24 @@ Install in editable mode: `pip install -e .`
 - All database access goes through `DBConnection` in `src/db.py`
 - Reports are written to `/out/` with timestamped filenames
 - Keep scripts runnable from the project root (scripts use `sys.path.insert` to resolve `src/`)
-- Every script must have a comment at the top with the command to run it, e.g. `# Run with: python src/scripts/db/run_top_statements.py`
+- Every script must have a comment at the top with the command(s) to run it, including required and optional parameters. Format: `python/pytest path/to/script --requiredparam value [--optionalparam value]`. If there are multiple invocation forms (e.g. with and without an optional flag), list each on its own `# Run with:` / `#` line, e.g.:
+  ```
+  # Run with: pytest tests/test_explain.py -v
+  #           pytest tests/test_explain.py -v [--keep-output]
+  ```
 - `main()` should contain minimal logic — split logic into well-named methods and have `main()` orchestrate calls to them
 - Scripts live under `src/scripts/`, organized into subfolders where applicable (e.g. `src/scripts/db/` for database-related scripts like `mask_db_config.py` and `run_top_statements.py`)
 
-## Query Conventions
+## SQL Conventions
 
 - DB query methods should return `List[Dict]` by default (one dict per row, keyed by column name)
+- Queries used by work-performing scripts should live under `src/sql/queries/`
+- SQL scripts used to mock data, seed tables, etc. should live under `src/sql/scripts/`
+- DDL should live under `src/sql/DDL/`
 
 ## Database & Safety Rules
 
-- Never modify credentials in `db.toml` — use `src/mask_db_config.py` if you need to show config safely
+- Never modify credentials in `db.toml` — use `src/scripts/db/mask_db_config.py` if you need to show config safely
 - All queries against the live database should be read-only (SELECT only); never run INSERT/UPDATE/DELETE/DROP against the connected database
 - `db.toml` is in `.gitignore` — do not commit it; do not hardcode credentials anywhere
 
@@ -61,7 +69,7 @@ Install in editable mode: `pip install -e .`
 Always run the following tests after any refactoring to verify correctness:
 
 ```bash
-pytest tests/test_db.py -v
+pytest tests/test_db.py tests/test_explain.py -v
 ```
 
 Additional tests may be added to this list as the suite grows.
