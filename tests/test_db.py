@@ -22,3 +22,11 @@ def test_tenk1_count(db):
 def test_tenk2_count(db):
     result = db.query("select count(*) from tenk2")
     assert result[0][0] == 10000
+
+def test_onek_unique1(db):
+    result = db.query("select unique1 from onek order by unique1")
+    unique1 = set()
+    for row in result:
+        assert row[0] <= 1000 and row[0] >= 0
+        unique1.add(row[0])
+    assert len(unique1) == 1000
