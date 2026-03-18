@@ -1,0 +1,184 @@
+CPU Stress Verification Report
+Generated : 2026-03-18 12:11:40
+Mode      : 1 session(s)
+Session 1 : 11.5s elapsed, 1,000,000 rows returned
+====================================================================================================
+
+1. pg_stat_statements — BEFORE stress run
+----------------------------------------------------------------------------------------------------
+  queryid=-8674993072425822767  calls=4  total_ms=   53,526.17  mean_ms= 13,381.54  rows= 4,000,000  blks_hit=  99,426  blks_read=  42,759  temp_written=     0
+    query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::float8 + $1) * sqrt(t2.unique1::float8 + 
+  queryid=4052839996180126655  calls=2  total_ms=   14,258.36  mean_ms=  7,129.18  rows= 2,000,000  blks_hit=22,255,845  blks_read=       8  temp_written=     0
+    query: COPY public.tenk1 (unique1, unique2, two, four, ten, twenty, hundred, thousand, twothousand, fivetho
+  queryid=-7803690906058946428  calls=1  total_ms=      193.71  mean_ms=    193.71  rows=    10,000  blks_hit=     373  blks_read=       0  temp_written=     0
+    query: COPY  public.tenk1 ( unique1, unique2, two, four, ten, twenty, hundred, thousand, twothousand, fivet
+  queryid=1401353597066051819  calls=1  total_ms=       26.20  mean_ms=     26.20  rows=         0  blks_hit=     444  blks_read=       8  temp_written=     0
+    query: CREATE TABLE IF NOT EXISTS public.tenk1
+(
+    unique1 integer,
+    unique2 integer,
+    two integer,
+  queryid=6533393364559617954  calls=1  total_ms=        3.03  mean_ms=      3.03  rows=         0  blks_hit=     336  blks_read=       1  temp_written=     0
+    query: CREATE TABLE IF NOT EXISTS public.tenk2
+(
+    unique1 integer,
+    unique2 integer,
+    two integer,
+
+2. pg_stat_activity — DURING stress run (sampled every ~1.5s)
+----------------------------------------------------------------------------------------------------
+  NOTE: 3 distinct PIDs observed across all snapshots (expected 1 stress session(s) + up to 2 parallel worker backends).
+  PostgreSQL parallel query is active — each session may have spawned workers.
+
+  [12:11:30.004]
+    pid= 22052  state=active    wait=None (CPU active)             dur=   1.49s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=None (CPU active)             dur=   1.49s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=   1.49s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+  [12:11:31.515]
+    pid= 22052  state=active    wait=None (CPU active)             dur=   3.00s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=None (CPU active)             dur=   3.00s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=   3.00s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+  [12:11:33.016]
+    pid= 22052  state=active    wait=None (CPU active)             dur=   4.50s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=None (CPU active)             dur=   4.50s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=   4.50s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+  [12:11:34.529]
+    pid= 22052  state=active    wait=None (CPU active)             dur=   6.01s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=None (CPU active)             dur=   6.01s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=   6.01s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+  [12:11:36.042]
+    pid= 22052  state=active    wait=None (CPU active)             dur=   7.52s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=None (CPU active)             dur=   7.52s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=   7.52s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+  [12:11:37.545]
+    pid= 22052  state=active    wait=None (CPU active)             dur=   9.03s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=None (CPU active)             dur=   9.03s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=   9.03s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+  [12:11:39.048]
+    pid= 22052  state=active    wait=None (CPU active)             dur=  10.53s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid=  6732  state=active    wait=IPC/MessageQueueSend          dur=  10.53s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+    pid= 25560  state=active    wait=None (CPU active)             dur=  10.53s  query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::f
+
+3. pg_stat_statements — AFTER stress run
+----------------------------------------------------------------------------------------------------
+  queryid=-8674993072425822767  calls=5  total_ms=   64,385.69  mean_ms= 12,877.14  rows= 5,000,000  blks_hit= 122,560  blks_read=  55,172  temp_written=     0
+    query: SELECT
+    t1.unique1,
+    sum(
+          sqrt(t1.unique1::float8 + $1) * sqrt(t2.unique1::float8 + 
+  queryid=4052839996180126655  calls=2  total_ms=   14,258.36  mean_ms=  7,129.18  rows= 2,000,000  blks_hit=22,255,845  blks_read=       8  temp_written=     0
+    query: COPY public.tenk1 (unique1, unique2, two, four, ten, twenty, hundred, thousand, twothousand, fivetho
+  queryid=-7803690906058946428  calls=1  total_ms=      193.71  mean_ms=    193.71  rows=    10,000  blks_hit=     373  blks_read=       0  temp_written=     0
+    query: COPY  public.tenk1 ( unique1, unique2, two, four, ten, twenty, hundred, thousand, twothousand, fivet
+  queryid=1401353597066051819  calls=1  total_ms=       26.20  mean_ms=     26.20  rows=         0  blks_hit=     444  blks_read=       8  temp_written=     0
+    query: CREATE TABLE IF NOT EXISTS public.tenk1
+(
+    unique1 integer,
+    unique2 integer,
+    two integer,
+  queryid=6533393364559617954  calls=1  total_ms=        3.03  mean_ms=      3.03  rows=         0  blks_hit=     336  blks_read=       1  temp_written=     0
+    query: CREATE TABLE IF NOT EXISTS public.tenk2
+(
+    unique1 integer,
+    unique2 integer,
+    two integer,
+
+4. ANALYSIS
+====================================================================================================
+FINDING 1 — Concurrent execution
+----------------------------------------------------------------------------------------------------
+  Single-session mode — no concurrency intended.
+  Session 1: started 12:11:28, elapsed 11.5s
+  This run serves as a single-session baseline for comparison with a two-session
+  contention run. Compare elapsed time and pg_stat_statements cost between modes
+  to quantify the overhead introduced by CPU contention.
+
+FINDING 2 — CPU-bound execution (wait_event analysis)
+----------------------------------------------------------------------------------------------------
+  20/21 session-observations (95%) had wait_event_type = NULL (actively executing on CPU).
+  CONFIRMED CPU-bound: sessions spent the large majority of observed time
+  executing instructions rather than waiting on locks, I/O, or other resources.
+
+FINDING 3 — Hash join memory (work_mem / temp spill check)
+----------------------------------------------------------------------------------------------------
+  temp_blks_written delta = 0.
+  Hash join remained in memory — work_mem = '1GB' was sufficient.
+  Workload is confirmed CPU-bound as intended.
+
+FINDING 4 — pg_stat_statements accumulated cost
+----------------------------------------------------------------------------------------------------
+  calls delta      : +1  (expected +1)
+  total_exec_time  : +10,859.5 ms across one session
+  avg per session  : 10,859.5 ms
+
+FINDING 5 — Visibility in pg_stat_statements
+----------------------------------------------------------------------------------------------------
+  VISIBLE. The stress query accumulated 64,386 ms total execution time across 5 call(s).
+  Ordering pg_stat_statements by total_exec_time DESC will rank it at or near the top.
+  This matches how a CPU-intensive query would be identified in a production diagnosis.

@@ -55,7 +55,7 @@ Install in editable mode: `pip install -e .`
 ## Database & Safety Rules
 
 - Never modify credentials in `db.toml` — use `src/scripts/db/mask_db_config.py` if you need to show config safely
-- All queries against the live database should be read-only (SELECT only); never run INSERT/UPDATE/DELETE/DROP against the connected database
+- All queries against the live database should be read-only (SELECT only) by default; never run INSERT/UPDATE/DELETE/DROP against the connected database unless explicitly asked to do so.
 - `db.toml` is in `.gitignore` — do not commit it; do not hardcode credentials anywhere
 
 ## Testing

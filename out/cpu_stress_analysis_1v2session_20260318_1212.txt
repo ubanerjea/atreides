@@ -1,0 +1,25 @@
+Single-session vs Two-session comparison
+Metric	1 session	2 sessions
+Elapsed time per session	11.5s	14.4s
+Overhead from contention	—	+25% slower
+Active PIDs in pg_stat_activity	3 (1 leader + 2 workers)	6 (2 leaders + 4 workers)
+pg_stat_statements cost added	+10,860 ms	+26,500 ms
+avg cost per session	10,860 ms	13,250 ms
+wait_event_type = NULL	95% (20/21 obs)	100% (48/48 obs)
+IPC/MessageQueueSend waits	1 observation	0
+What the differences show
+Elapsed time (+25%)
+
+Each session ran 11.5s alone but 14.4s when competing. That 2.9s gap is the cost of CPU contention — both sessions are fighting for the same physical cores, so each gets scheduled out more and completes later. This is exactly the kind of regression a DBA would see in production when a rogue query is competing with normal workload.
+
+PID count (3 vs 6)
+
+A single session spawned 1 leader + 2 parallel workers = 3 PIDs. Two sessions spawned 2 leaders + 4 workers = 6 PIDs. PostgreSQL's parallel query executor doubled the demand on the CPU thread pool. With 16 logical processors on the i5-12600KF, 6 CPU-hungry threads represent ~38% of total thread capacity claimed by just these two queries.
+
+pg_stat_statements cost per session (10,860ms vs 13,250ms = +22%)
+
+The mean_exec_time in pg_stat_statements directly reflects the contention overhead. In a real production investigation, seeing mean_exec_time spike significantly between runs of the same query — without any data volume change — is a strong signal of CPU resource contention rather than a query regression.
+
+IPC/MessageQueueSend (1 observation in single-session, 0 in two-session)
+
+This is a parallel query internal — a worker backend briefly waiting to send a tuple batch to the leader via shared memory. It appeared once in the single-session run at the 10.5s mark (near query completion during the final sort/hash aggregate phase) and not at all in the two-session run. This likely reflects timing: in the two-session run the CPU was so saturated that the monitor thread's poll landed during pure execution phases, whereas in the single-session run the CPU had spare capacity and the worker completed its batch faster, catching the brief IPC handoff.
